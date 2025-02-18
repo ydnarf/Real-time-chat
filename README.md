@@ -4,10 +4,10 @@ Este es un proyecto de chat en tiempo real desarrollado con Node.js, Socket.io, 
 
 <h2>🚀 Tecnologías utilizadas</h2>
 
-Node.js - Entorno de ejecución para JavaScript en el backend.<br>
-Express.js - Framework para manejar las rutas y el servidor HTTP.<br>
-Socket.io - Biblioteca para la comunicación en tiempo real mediante WebSockets.<br>
-HTML & CSS - Estructura y diseño del frontend.
+<strong>Node.js</strong> - Entorno de ejecución para JavaScript en el backend.<br>
+<strong>Express.js</strong> - Framework para manejar las rutas y el servidor HTTP.<br>
+<strong>Socket.io</strong> - Biblioteca para la comunicación en tiempo real mediante WebSockets.<br>
+<strong>HTML & CSS</strong> - Estructura y diseño del frontend.
 
 <h2>✨ Funcionalidades</h2>
 
