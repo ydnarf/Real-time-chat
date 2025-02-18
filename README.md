@@ -11,7 +11,7 @@ HTML & CSS - Estructura y diseño del frontend.
 
 ✨ Funcionalidades
 
-✅ Conexión en tiempo real entre múltiples usuarios.
-✅ Envío y recepción de mensajes instantáneos.
-✅ Notificaciones de usuarios conectados y desconectados.
+✅ Conexión en tiempo real entre múltiples usuarios. <br>
+✅ Envío y recepción de mensajes instantáneos. <br>
+✅ Notificaciones de usuarios conectados y desconectados.<br>
 ✅ Interfaz sencilla y responsive.
