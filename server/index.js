@@ -1,5 +1,7 @@
 import express from 'express'
 import logger from 'morgan'
+import dotenv from 'dotenv'
+import { createClient } from '@libsql/client'
 
 import { Server } from 'socket.io'
 import { createServer } from 'node:http'
@@ -10,6 +12,11 @@ const app = express()
 const server = createServer(app)
 const io = new Server(server, {
   connectionStateRecovery: {}
+})
+
+const db = createClient({
+  url: "libsql://helped-changeling-frandyrn.turso.io",
+  authToken: "process.ev.DB_TOKEN"
 })
 
 io.on('connection', (socket) => {
