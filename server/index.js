@@ -6,6 +6,7 @@ import { createClient } from '@libsql/client'
 import { Server } from 'socket.io'
 import { createServer } from 'node:http'
 
+
 dotenv.config()
 
 const port = process.env.PORT ?? 3000
@@ -25,7 +26,8 @@ const db = createClient({
 await db.execute(`
       CREATE TABLE IF NOT EXISTS messages (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        Content TEXT
+        Content TEXT,
+        user TEXT
       )
     `)
 
@@ -39,30 +41,30 @@ io.on('connection', async (socket) => {
 
   socket.on('chat message', async (msg) => {
     let result
+    const username = socket.handshake.auth.username ?? 'Anonymous'
+    console.log({ username })
     try {
       result = await db.execute({
-        sql: `INSERT INTO messages (Content) VALUES (:msg)`,
-        args: { msg }
+        sql: `INSERT INTO messages (Content, user)  VALUES (:msg, :username)`,
+        args: { msg, username }
       })
-      io.emit('chat message', msg, result.lastInsertRowid.toString())
     } catch (e) {
       console.error("Error inserting message:", e)
       return
     }
-  })
 
-  console.log('auth')
-  console.log(socket.handshake.auth)
+    io.emit('chat message', msg, result.lastInsertRowid.toString(), username)
+  })
 
   if (!socket.recovered) {
     try {
       const results = await db.execute({
-        sql: `SELECT id, Content FROM messages WHERE id > ?`,
+        sql: `SELECT id, Content, user FROM messages WHERE id > ?`,
         args: [socket.handshake.auth.serverOffset ?? 0]
       })
 
       results.rows.forEach(row => {
-        socket.emit('chat message', row.Content, row.id.toString())
+        socket.emit('chat message', row.Content, row.id.toString(), row.user)
       })
     } catch (e) {
       console.error("Error fetching messages:", e)
