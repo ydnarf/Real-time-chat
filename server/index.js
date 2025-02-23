@@ -7,11 +7,15 @@ import { createServer } from 'node:http'
 const port = process.env.PORT ?? 3000
 
 const app = express()
-const Server = createServer(app)
+const server = createServer(app)
 const io = new Server(server)
 
-io.on('connection', () => {
+io.on('connection', (socket) => {
     console.log('A user connected')
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected')
+    })
 })
 
 app.use(logger('dev'))

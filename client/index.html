@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webChat</title>
+    <script type="module">
+        import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
+        
+        const socket = io();
+    </script>
     <style>
         *,
         *::before,
@@ -28,6 +33,42 @@
             width: 350px;
             height: 100%;
             position: relative;
+        }
+
+        #form {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            border-top: 1px solid #ccc;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #f9f9f9;
+        }
+
+        #input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        #form > button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #09f;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #form > button:hover {
+            background-color: #0077cc;
         }
 
         h1 {
