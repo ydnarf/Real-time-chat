@@ -17,16 +17,26 @@ const io = new Server(server, {
 })
 
 const db = createClient({
-  url: "libsql://helped-changeling-frandyrn.turso.io",
-  authToken: "process.env.DB_TOKEN"
+  url: process.env.DB_URL,
+  authToken: process.env.DB_TOKEN
 })
 
-await db.execute(`
-  CREATE TABLE IF NOT EXISTS messages (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  Content TEXT
-  )
-`)
+async function initializeDatabase() {
+  try {
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Content TEXT
+      )
+    `)
+    console.log("Database initialized.")
+  } catch (e) {
+    console.error("Error initializing database:", e)
+  }
+}
+
+
+initializeDatabase()
 
 io.on('connection', (socket) => {
   console.log('A user connected')
@@ -35,12 +45,18 @@ io.on('connection', (socket) => {
     console.log('User disconnected')
   })
 
-  // socket.on('chat message', (msg) => {
-  //   console.log(`message: ` + msg)
-  // })
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg)
+  socket.on('chat message', async (msg) => {
+    let result
+    try {
+      result = await db.execute({
+        sql: `INSERT INTO messages (Content) VALUES (:msg)`,
+        args: { msg }
+      })
+      io.emit('chat message', msg, result.lastInsertRowid.toString())
+    } catch (e) {
+      console.error("Error inserting message:", e)
+    }
   })
 })
 
