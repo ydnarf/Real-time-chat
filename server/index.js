@@ -6,6 +6,8 @@ import { createClient } from '@libsql/client'
 import { Server } from 'socket.io'
 import { createServer } from 'node:http'
 
+dotenv.config()
+
 const port = process.env.PORT ?? 3000
 
 const app = express()
@@ -16,8 +18,15 @@ const io = new Server(server, {
 
 const db = createClient({
   url: "libsql://helped-changeling-frandyrn.turso.io",
-  authToken: "process.ev.DB_TOKEN"
+  authToken: "process.env.DB_TOKEN"
 })
+
+await db.execute(`
+  CREATE TABLE IF NOT EXISTS messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Content TEXT
+  )
+`)
 
 io.on('connection', (socket) => {
   console.log('A user connected')
